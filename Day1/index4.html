@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <button onclick="doSomething()" style="background-color: azure; border-radius: 10px; ">Click Me</button>
+    <p id="greeting">Hello</p>
+    <script>
+        function doSomething(){
+            if(greeting.innerText == "Hello"){
+                greeting.innerText = "Bye";
+            }else{
+                greeting.innerText = "Hello";
+            }
+        }
+    </script>
+</body>
+</html>

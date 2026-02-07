@@ -1,0 +1,22 @@
+header {
+    display: flex;        /* make header a flex container */
+    align-items: center;  /* vertically center h1 and nav */
+    justify-content: space-between; /* h1 left, nav right */
+    padding: 10px 20px;
+    background-color: tomato;
+}
+
+nav {
+    display: flex;           /* make links flex items */
+    justify-content: flex-end; /* push links to the right inside nav */
+    gap: 15px;
+    background-color: aqua;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    padding: 5px 10px;
+    background-color: lightgray;
+    border-radius: 4px;
+}
