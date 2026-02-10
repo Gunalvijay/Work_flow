@@ -1,0 +1,43 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#resume{
+    width: 40%;
+    margin: auto;
+    border: 1px solid black;
+    padding: 20px;
+}
+#header-top{
+    display: flex;
+    justify-content: space-between;
+}
+#name{
+    font-size: 35px;
+    padding: 20px;
+    padding-left: 40px;
+}
+#about{
+    padding-left: 15px;
+}
+
+#education p{
+    padding-left: 15px;
+}
+
+h3, h1{
+    color: rgb(167, 80, 238);
+}
+
+hr{
+    color: white;
+}
+
+#contact li a{
+    color: black;
+}
+
+#contact li a:hover{
+    cursor: pointer;
+}
