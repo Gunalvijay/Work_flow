@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  height: 200px;
+  align-items: stretch;
+  background-color: DodgerBlue;
+}
+
+.container div {
+  background-color: #f1f1f1;
+  width: 100px;
+  margin: 10px;
+  padding: 10px;
+  text-align: center;  
+  font-size: 30px;
+}
+
+@media screen and (max-width: 600px) {
+    .container{
+        background-color: blueviolet;
+        flex-direction: column;
+    }
+}
