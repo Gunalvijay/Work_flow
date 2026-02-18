@@ -1,0 +1,648 @@
+TypeScript:
+   
+    TypeScript allows specifying the types of data being passed around within the code, and has the ability to report errors when the types don't match.
+    TypeScript uses compile time type checking.
+    The most basic types in TypeScript are called primitives.
+    These types form the building blocks of more complex types in your applications.
+
+Explicit type annotation:
+
+    let isActive: boolean = true;
+
+    // Function with explicit parameter and return types
+    function greet(name: string): string {
+    return `Hello, ${name}!`;
+    }
+
+Type inference:
+
+    let hasPermission = false;
+
+Number:
+    
+    let decimal: number = 6;
+    let hex: number = 0xf00d;       // Hexadecimal
+    let binary: number = 0b1010;     // Binary
+    let octal: number = 0o744;      // Octal
+    let float: number = 3.14;      // Floating point
+
+String:
+
+    let color: string = "blue";
+    let fullName: string = 'John Doe';
+    let age: number = 30;
+    let sentence: string = `Hello, my name is ${fullName} and I'll be ${age + 1} next year.`;
+
+BigInt (ES2020+):
+
+    Represents whole numbers larger than 253 - 1.
+    Use the n suffix to create a bigint.
+
+    const bigNumber: bigint = 9007199254740991n;
+    const hugeNumber = BigInt(9007199254740991); // Alternative syntax
+
+Symbol:
+
+    Creates unique identifiers.
+    const uniqueKey: symbol = Symbol('description');
+    const obj = {
+        [uniqueKey]: 'This is a unique property'
+    };
+    console.log(obj[uniqueKey]);
+
+When TypeScript Can't Infer Types:
+
+    While TypeScript's type inference is powerful, there are cases where it can't determine the correct type.
+    In these situations, TypeScript falls back to the any type, which disables type checking.
+
+    // 1. JSON.parse returns 'any' because the structure isn't known at compile time
+    const data = JSON.parse('{ "name": "Alice", "age": 30 }');
+
+    // 2. Variables declared without initialization
+    let something;  // Type is 'any'
+    something = 'hello';
+    something = 42;  // No error
+
+    Using any disables TypeScript's type checking.
+
+Type: unknown
+   The unknown type is a type-safe counterpart of any.
+
+   It's the type-safe way to say "this could be anything, so you must perform some type of checking before you use it".
+
+Type: never:
+
+   The never type represents the type of values that never occur.
+
+   It's used to indicate that something never happens or should never happen.
+
+Installing the Compiler:
+
+   npm install typescript --save-dev
+       The compiler is installed in the node_modules directory and can be run with: npx tsc.
+
+   npx tsc
+
+Configuring the compiler:
+
+   The compiler can be configured using a tsconfig.json file.
+   You can have TypeScript create tsconfig.json with the recommended settings with:
+
+   npx tsc --init
+
+Compile your TypeScript code:
+
+   npx tsc filename
+
+TypeScript utility types:
+
+Utility types in TypeScript are predefined generic helper types that transform existing types into new ones.
+
+They help you avoid rewriting common type patterns.
+
+They are built using generics + mapped types + conditional types internally.
+
+🔹 1️⃣ Partial<T>
+
+Makes all properties optional.
+
+Example
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+type PartialUser = Partial<User>;
+
+
+Now equivalent to:
+
+type PartialUser = {
+  id?: number;
+  name?: string;
+  email?: string;
+};
+
+Usage
+function updateUser(user: User, updates: Partial<User>) {
+  return { ...user, ...updates };
+}
+
+
+Very common in update APIs.
+
+🔹 2️⃣ Required<T>
+
+Makes all properties required.
+
+interface Config {
+  theme?: string;
+  darkMode?: boolean;
+}
+
+type FullConfig = Required<Config>;
+
+
+Now:
+
+type FullConfig = {
+  theme: string;
+  darkMode: boolean;
+};
+
+🔹 3️⃣ Readonly<T>
+
+Makes all properties readonly.
+
+type ReadonlyUser = Readonly<User>;
+
+
+Equivalent to:
+
+{
+  readonly id: number;
+  readonly name: string;
+  readonly email: string;
+}
+
+
+Useful for immutable state.
+
+🔹 4️⃣ Pick<T, K>
+
+Selects specific properties.
+
+type UserPreview = Pick<User, "id" | "name">;
+
+
+Equivalent to:
+
+{
+  id: number;
+  name: string;
+}
+
+
+Very useful for DTOs.
+
+🔹 5️⃣ Omit<T, K>
+
+Removes specific properties.
+
+type CreateUser = Omit<User, "id">;
+
+
+Equivalent to:
+
+{
+  name: string;
+  email: string;
+}
+
+
+Common when creating new records (ID auto-generated).
+
+🔹 6️⃣ Record<K, T>
+
+Creates an object type with specific key and value types.
+
+type Role = "admin" | "user";
+
+type RolePermissions = Record<Role, string[]>;
+
+
+Equivalent to:
+
+{
+  admin: string[];
+  user: string[];
+}
+
+🔹 7️⃣ Exclude<T, U>
+
+Removes types from a union.
+
+type Status = "success" | "error" | "loading";
+
+type FinalStatus = Exclude<Status, "loading">;
+
+
+Result:
+
+"success" | "error"
+
+🔹 8️⃣ Extract<T, U>
+
+Keeps only matching types from a union.
+
+type OnlySuccess = Extract<Status, "success">;
+
+
+Result:
+
+"success"
+
+🔹 9️⃣ NonNullable<T>
+
+Removes null and undefined.
+
+type MaybeString = string | null | undefined;
+
+type SafeString = NonNullable<MaybeString>;
+
+
+Result:
+
+string
+
+🔹 🔟 ReturnType<T>
+
+Extracts return type of a function.
+
+function getUser() {
+  return { id: 1, name: "Gunal" };
+}
+
+type UserType = ReturnType<typeof getUser>;
+
+
+Result:
+
+{ id: number; name: string }
+
+🔹 1️⃣1️⃣ Parameters<T>
+
+Gets parameter types of a function.
+
+function greet(name: string, age: number) {}
+
+type Params = Parameters<typeof greet>;
+
+
+Result:
+
+[string, number]
+
+--------------------------------------------------------------------------------------
+
+Advanced Type System :
+
+keyof takes an object type and produces a union of its property names.
+
+Example
+interface User {
+  id: number;
+  name: string;
+  age: number;
+}
+
+type UserKeys = keyof User;
+
+
+Now:
+
+type UserKeys = "id" | "name" | "age";
+
+
+So keyof converts:
+
+Object type → union of keys
+
+🔹 2️⃣ Indexed Access Types (T[K])
+
+This lets you access the type of a property.
+
+Example
+type UserNameType = User["name"];
+
+
+Now:
+
+type UserNameType = string;
+
+
+So:
+
+User["name"] → string
+----------------------------------------
+
+Mapped types:
+
+In TypeScript, mapped types let you create new types by transforming the properties of an existing type.
+Think of it as:
+
+“Looping over the keys of a type and generating a new type.”
+
+Syntax
+type NewType = {
+  [Key in keyof ExistingType]: SomeTransformation;
+}
+
+2️⃣ Basic Example
+type User = {
+  name: string;
+  age: number;
+};
+
+
+Now create a type where all properties are boolean:
+
+type UserFlags = {
+  [K in keyof User]: boolean;
+};
+
+
+Equivalent to:
+
+type UserFlags = {
+  name: boolean;
+  age: boolean;
+};
+
+7️⃣ Conditional + Mapped Types (Advanced Pattern)
+
+Example: Convert only number properties to string
+
+type ConvertNumbers<T> = {
+  [K in keyof T]: T[K] extends number ? string : T[K];
+};
+
+
+Usage:
+
+type User = {
+  name: string;
+  age: number;
+  isAdmin: boolean;
+};
+
+type UpdatedUser = ConvertNumbers<User>;
+
+
+Result:
+
+{
+  name: string;
+  age: string;      // converted
+  isAdmin: boolean; // unchanged
+}
+
+
+This is very powerful in real-world type transformations.
+
+----------------------------------------------------------------------------
+
+Infer Keyword:
+
+    The infer keyword is used inside conditional types to extract a type from another type.
+    It lets TypeScript “capture” a type and reuse it.
+
+    infer can only be used inside:conditional types
+
+    // Step 1: Create a custom ReturnType utility
+type MyReturnType<T> = 
+  T extends (...args: any[]) => infer R 
+    ? R 
+    : never;
+
+
+// Step 2: A sample function
+function greet(name: string): string {
+  return "Hello " + name;
+}
+
+
+// Step 3: Use typeof to get function type
+type GreetReturnType = MyReturnType<typeof greet>;
+
+
+// Step 4: Test it
+const message: GreetReturnType = "Hello Gunal";
+
+console.log(message);
+
+
+important:-
+   
+   R is not special. It is just a placeholder name.
+   It becomes the return type only because of where it is placed in this pattern:
+
+------------------------------------------------------------------------------------------
+
+1️⃣ What Is a Module?
+
+In TypeScript (and modern JavaScript):
+
+A module is simply a file with its own scope.
+
+Each file becomes isolated.
+Variables, functions, classes are not global unless exported.
+
+A file becomes a module if it contains:
+
+export or import
+
+Modules are about: File-level organization and dependency management.
+
+--------------------------------------------------------------------------------------------------
+
+1️⃣ What Is a Declaration File (.d.ts)?
+
+A Declaration File is a TypeScript file that:
+
+Contains only type information
+Contains NO implementation
+
+It describes the shape of JavaScript code.
+
+2️⃣ Why Do We Need .d.ts Files?
+
+TypeScript adds types.
+JavaScript does not have types.
+
+So when you use a JavaScript library inside TypeScript, TypeScript asks:
+
+“What are the types of this library?”
+
+Since JS has no types, we provide them using a .d.ts file.
+
+4️⃣ Important Rule
+
+.d.ts files:
+
+Contain only type declarations
+
+No logic
+
+No runtime code
+
+Only compile-time information
+
+They disappear after compilation.
+
+5️⃣ Real-World Example
+
+When you install:
+
+npm install express
+
+
+Express is JavaScript.
+
+To use it in TypeScript properly, you install:
+
+npm install @types/express
+
+
+That package contains:
+
+index.d.ts
+
+
+Which describes all Express types.
+
+So TypeScript understands:
+
+Request
+
+Response
+
+Middleware
+
+etc.
+
+8️⃣ Types of Declaration Files
+
+There are two main types:
+
+1️⃣ Module Declaration File
+
+Describes exported module content.
+
+Example:
+
+declare module "math-lib" {
+  export function add(a: number, b: number): number;
+}
+
+2️⃣ Global Declaration File
+
+Declares things globally.
+
+Example:
+
+declare function greet(name: string): void;
+
+1️⃣2️⃣ Advanced Concept: declare
+
+The keyword declare means:
+
+“This exists somewhere else. Don’t generate code for it.”
+
+Example:
+
+declare function alert(message: string): void;
+
+TypeScript assumes it exists (like browser alert).
+
+9️⃣ Where TypeScript Looks for .d.ts
+
+TypeScript automatically looks for:
+
+node_modules/@types
+
+Files included in tsconfig.json
+
+Adjacent .d.ts next to .js files
+
+---------------------------------------------------------------------
+
+1️⃣ What Is a Namespace in TypeScript?
+
+A namespace is a way to group related code under one name.
+
+It helps:
+
+Avoid naming conflicts
+
+Organize code
+
+Structure large applications
+
+Example
+
+namespace MathUtils {
+
+  export function add(a: number, b: number) {
+    return a + b;
+  }
+
+  export function multiply(a: number, b: number) {
+    return a * b;
+  }
+}
+
+------------------------------------------------------------------
+
+1️⃣ What Is a Decorator?
+
+A decorator is:
+
+A special function that can modify or enhance a class or class member.
+
+It is written using @ syntax.
+
+Example:
+
+@SomeDecorator
+class User {}
+
+
+A decorator is just a function.
+
+2️⃣ Important: Decorators Are Experimental
+
+To use decorators, you must enable in tsconfig.json:
+
+{
+  "compilerOptions": {
+    "experimentalDecorators": true
+  }
+}
+
+
+Without this, decorators won’t work.
+
+6️⃣ Types of Decorators
+
+There are 5 types:
+
+Class decorator
+
+Method decorator
+
+Property decorator
+
+Accessor decorator
+
+Parameter decorator
+
+-----------------------------------------------------------------------------------
+
+1️⃣ What Is JSDoc Support in TypeScript?
+
+TypeScript can:
+
+Analyze .js files
+
+Read JSDoc comments
+
+Infer types from them
+
+Provide IntelliSense
+
+Perform type checking
+
+All without converting to .ts.
+
